@@ -200,13 +200,3 @@ export default function WhatWeDo() {
     </>
   );
 }
-
-
-
-
-Blog
-BoardAndAdvisor
-Team
-StoryCard
-Event
-Media

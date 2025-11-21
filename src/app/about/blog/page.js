@@ -6,11 +6,14 @@ import { useEffect, useState } from "react";
 
 export default function Blog() {
   const [selectedBlog, setSelectedBlog] = useState(null);
+  const [blogs, setBlogs] = useState([]);
 
   // FIX bootstrap undefined error
   useEffect(() => {
     async function loadBootstrap() {
-      const bootstrap = await import("bootstrap/dist/js/bootstrap.bundle.min.js");
+      const bootstrap = await import(
+        "bootstrap/dist/js/bootstrap.bundle.min.js"
+      );
       window.bootstrap = bootstrap; // store globally
 
       // Initialize all carousels
@@ -27,41 +30,25 @@ export default function Blog() {
   }, []);
 
   // Blog Data
-  const blogs = [
-    {
-      id: 1,
-      title: "Amazing Book Collection",
-      short: "We have curated two books for the reading month...",
-      long:
-        "This is the detailed full description of the blog. You can write unlimited content here...",
-      images: ["/img/hero-1.png", "/img/hero-2.png", "/img/hero-1.png"],
-    },
-    {
-      id: 2,
-      title: "Children’s Reading Week",
-      short: "Introducing new books curated for daily reading...",
-      long:
-        "This month we focus on building consistent reading habits in children...",
-      images: ["/img/hero-1.png", "/img/hero-2.png", "/img/hero-1.png"],
-    },
-    {
-      id: 3,
-      title: "Festival Special Stories",
-      short: "Explore inspiring festival-themed stories...",
-      long:
-        "During the festival month, children get to explore stories full of culture and values...",
-      images: ["/img/hero-1.png", "/img/hero-2.png", "/img/hero-1.png"],
-    },
-  ];
+  useEffect(() => {
+    async function fetchBlogs() {
+      const res = await fetch("/api/blog");
+      const data = await res.json();
+      setBlogs(data);
+    }
+    fetchBlogs();
+  }, []);
 
   // Open Modal Function
   const openBlog = (blog) => {
     setSelectedBlog(blog);
 
     setTimeout(() => {
-      const modal = new window.bootstrap.Modal(document.getElementById("blogModal"));
+      const modal = new window.bootstrap.Modal(
+        document.getElementById("blogModal")
+      );
       modal.show();
-    }, 150);
+    }, 100);
   };
 
   return (
@@ -74,7 +61,6 @@ export default function Blog() {
             {blogs.map((blog, index) => (
               <div className="col-lg-4 col-md-6" key={blog.id}>
                 <div className="card border-0 shadow-lg h-100 rounded-4 overflow-hidden">
-
                   {/* Carousel */}
                   <div
                     id={`carousel-${index}`}
@@ -103,7 +89,7 @@ export default function Blog() {
                   {/* Card Body */}
                   <div className="card-body p-4">
                     <h5 className="fw-bold">{blog.title}</h5>
-                    <p>{blog.short}</p>
+                    <p>{blog.shortNote}</p>
 
                     <button
                       className="btn btn-danger rounded-2 mt-2"
@@ -112,7 +98,6 @@ export default function Blog() {
                       Read More
                     </button>
                   </div>
-
                 </div>
               </div>
             ))}
@@ -129,7 +114,6 @@ export default function Blog() {
       >
         <div className="modal-dialog modal-lg modal-dialog-centered">
           <div className="modal-content rounded-4 shadow-lg">
-
             <div className="modal-header">
               <h5 className="modal-title fw-bold">{selectedBlog?.title}</h5>
               <button
@@ -165,7 +149,7 @@ export default function Blog() {
                 </div>
               )}
 
-              <p className="text-dark">{selectedBlog?.long}</p>
+              <p className="text-dark">{selectedBlog?.longNote}</p>
             </div>
           </div>
         </div>

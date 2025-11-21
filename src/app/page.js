@@ -232,7 +232,10 @@ export default function HomeLayout() {
               <h2 className="text-center fw-bold mb-5">Explore Categories</h2>
               <div className="row g-4">
                 {[
-                  { label: "Board and Advisors", link: "/about/board-and-advisors" },
+                  {
+                    label: "Board and Advisors",
+                    link: "/about/board-and-advisors",
+                  },
                   { label: "Team", link: "/about/team" },
                   { label: "Events", link: "/events" },
                   { label: "Awards", link: "/about/awards" },
