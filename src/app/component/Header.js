@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export default function HeroHeader() {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // HOMEPAGE SLIDER IMAGES
@@ -62,15 +62,15 @@ export default function HeroHeader() {
       image: "/img/hero-1.png",
       title: "Annual Report",
     },
-     "/about/awards": {
+    "/about/awards": {
       image: "/img/hero-1.png",
       title: "Awards",
     },
-     "/about/board-and-advisors": {
+    "/about/board-and-advisors": {
       image: "/img/hero-1.png",
       title: "Board & Advisors",
     },
-     "/about/history": {
+    "/about/history": {
       image: "/img/hero-1.png",
       title: "History",
     },
@@ -112,13 +112,14 @@ export default function HeroHeader() {
     },
   };
   // Matching dynamic pages like /about/history/2024
-  const currentPageHero =
-    pageHero[pathname] ||
-    pageHero[pathname.split("/").slice(0, 2).join("/")] ||
-    pageHero["/about"]; // fallback hero
+  const currentPageHero = pageHero[pathname] ||
+    pageHero[pathname.split("/").slice(0, 2).join("/")] || {
+      image: "/img/hero-1.png",
+      title: "Thirunar Archives",
+    };
   // HOMEPAGE SLIDER AUTO CHANGE
   useEffect(() => {
-    if (pathname !== "/") return; 
+    if (pathname !== "/") return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
@@ -159,7 +160,7 @@ export default function HeroHeader() {
       </section>
     );
   }
-// HOMEPAGE: SLIDER SECTION
+  // HOMEPAGE: SLIDER SECTION
   return (
     <section className="hero-section">
       {slides.map((slide, index) => (
@@ -182,9 +183,7 @@ export default function HeroHeader() {
             <div className="col-lg-6 hero-left">
               <div className="hero-text-panel">
                 <div className="hero-text-content">
-                  <h1 className="hero-title">
-                    {slides[currentSlide].title}
-                  </h1>
+                  <h1 className="hero-title">{slides[currentSlide].title}</h1>
                 </div>
               </div>
             </div>
