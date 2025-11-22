@@ -1071,20 +1071,6 @@ ul li {
 .right-award {
   margin-left: 30% !important;
 }
-/* Blog */
-.custom-indicators [data-bs-target] {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #1d4ed8 !important;
-  opacity: 0.5;
-  margin: 5px;
-  transition: all 0.3s ease;
-}
-.custom-indicators .active {
-  opacity: 1;
-  background-color: #e63946 !important;
-}
 /* FAQ Section Styling */
 #faqAccordion .accordion-item {
   border: none;

@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     await ConnectMongoose();
-
     const formData = await req.formData();
     const title = formData.get("title");
     const shortNote = formData.get("shortNote");
@@ -16,30 +15,25 @@ export async function POST(req) {
       formData.get("image1"),
       formData.get("image2"),
       formData.get("image3")
-    ].filter((file) => file && file.size > 0);
-
+    ].filter(Boolean);
     const uploadedImages = [];
-
     for (const file of imageFiles) {
       const buffer = Buffer.from(await file.arrayBuffer());
-
-      const uploaded = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream(
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
           { folder: "blog_uploads" },
-          (err, result) => (err ? reject(err) : resolve(result))
-        ).end(buffer);
+          (error, result) => (error ? reject(error) : resolve(result))
+        );
+        stream.end(buffer);
       });
-
-      uploadedImages.push(uploaded.secure_url);
+      uploadedImages.push(uploadResult.secure_url);
     }
-
     const blog = await Blog.create({
       title,
       shortNote,
       longNote,
-      images: uploadedImages.length > 0 ? uploadedImages : []
+      images: uploadedImages
     });
-
     return NextResponse.json(blog, { status: 201 });
 
   } catch (err) {
@@ -47,7 +41,6 @@ export async function POST(req) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
-
 export async function GET() {
   try {
     await ConnectMongoose();

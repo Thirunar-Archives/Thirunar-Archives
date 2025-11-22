@@ -6,7 +6,8 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
   try {
     await ConnectMongoose();
-    const blog = await Blog.findById(params.id);
+    const { id } = await params;
+    const blog = await Blog.findById(id);
     if (!blog) {
       return NextResponse.json({ message: "Blog not found" }, { status: 404 });
     }
@@ -19,6 +20,7 @@ export async function GET(req, { params }) {
 export async function PUT(req, { params }) {
   try {
     await ConnectMongoose();
+    const { id } = await params;
     const formData = await req.formData();
     const title = formData.get("title");
     const shortNote = formData.get("shortNote");
@@ -26,12 +28,10 @@ export async function PUT(req, { params }) {
     const imageFiles = [
       formData.get("image1"),
       formData.get("image2"),
-      formData.get("image3")
-    ].filter(Boolean);
-
+      formData.get("image3"),
+    ].filter((f) => f && f.name);
     const uploadedImages = [];
     for (const file of imageFiles) {
-      if (!file || !file.name) continue;
       const buffer = Buffer.from(await file.arrayBuffer());
       const uploadResult = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -42,16 +42,17 @@ export async function PUT(req, { params }) {
       });
       uploadedImages.push(uploadResult.secure_url);
     }
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      params.id,
-      {
-        title,
-        shortNote,
-        longNote,
-        ...(uploadedImages.length > 0 && { images: uploadedImages })
-      },
-      { new: true }
-    );
+    const updateData = {
+      title,
+      shortNote,
+      longNote,
+    };
+    if (uploadedImages.length > 0) {
+      updateData.images = uploadedImages;
+    }
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
     if (!updatedBlog) {
       return NextResponse.json({ message: "Blog not found" }, { status: 404 });
     }
@@ -60,14 +61,19 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
 export async function DELETE(req, { params }) {
   try {
     await ConnectMongoose();
-    const blog = await Blog.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const blog = await Blog.findByIdAndDelete(id);
     if (!blog) {
       return NextResponse.json({ message: "Blog not found" }, { status: 404 });
     }
-    return NextResponse.json({ message: "Blog deleted successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Blog deleted successfully" },
+      { status: 200 }
+    );
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
