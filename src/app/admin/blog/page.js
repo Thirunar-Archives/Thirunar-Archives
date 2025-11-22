@@ -17,7 +17,7 @@ export default function AdminBlogPage() {
   const [editId, setEditId] = useState(null);
   const [existingImages, setExistingImages] = useState([]);
 
-  // Load Blogs Initially
+  // Fetch Blogs
   async function loadBlogs() {
     const res = await fetch("/api/blog");
     const data = await res.json();
@@ -31,12 +31,11 @@ export default function AdminBlogPage() {
     fetchData();
   }, []);
 
-  // Handle form Update
   function updateForm(key, value) {
     setForm({ ...form, [key]: value });
   }
 
-  // CREATE or UPDATE
+  // CREATE / UPDATE
   async function submitBlog(e) {
     e.preventDefault();
 
@@ -48,19 +47,16 @@ export default function AdminBlogPage() {
     formData.append("shortNote", form.shortNote);
     formData.append("longNote", form.longNote);
 
-    // if updating → send EXISTING images
     if (editId) {
       existingImages.forEach((img) => formData.append("existingImages", img));
     }
 
-    // Only append new uploads if selected
     if (form.image1) formData.append("image1", form.image1);
     if (form.image2) formData.append("image2", form.image2);
     if (form.image3) formData.append("image3", form.image3);
 
     await fetch(url, { method, body: formData });
 
-    // Reset
     setForm({
       title: "",
       shortNote: "",
@@ -75,7 +71,7 @@ export default function AdminBlogPage() {
     loadBlogs();
   }
 
-  // EDIT Blog
+  // EDIT
   function editBlog(blog) {
     setEditId(blog._id);
     setExistingImages(blog.images);
@@ -90,44 +86,46 @@ export default function AdminBlogPage() {
     });
   }
 
-  // Delete Blog
+  // DELETE
   async function deleteBlog(id) {
     await fetch(`/api/blog/${id}`, { method: "DELETE" });
     loadBlogs();
   }
+
+  // Initialize Bootstrap Carousels
   useEffect(() => {
     if (!window.bootstrap || blogs.length === 0) return;
+
     setTimeout(() => {
       document.querySelectorAll(".carousel").forEach((carousel) => {
         try {
           new window.bootstrap.Carousel(carousel, {
-            interval: 2000,
+            interval: 1000,
             ride: "carousel",
             pause: false,
             wrap: true,
           });
-        } catch (e) {
-          console.warn("Carousel Init Error:", e);
-        }
+        } catch {}
       });
     }, 200);
   }, [blogs]);
 
   return (
     <>
+      {/* Carousel Dot Styles */}
       <style>{`
         .carousel-indicators [data-bs-target] {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background-color: rgba(255, 255, 255, 0.6);
+          background-color: rgba(255,255,255,0.6);
         }
         .carousel-indicators .active {
           background-color: #1d4ed8;
         }
         @media (max-width: 768px) {
           .carousel-indicators {
-            bottom: -10px;
+            bottom: -12px;
           }
           .carousel-indicators [data-bs-target] {
             width: 10px;
@@ -138,7 +136,7 @@ export default function AdminBlogPage() {
       <div className="bg-style">
         <div className="container py-5">
           <h1 className="fw-bold mb-4 text-center">Admin - Manage Blogs</h1>
-          {/* Blog Form */}
+          {/* FORM */}
           <div className="row d-flex justify-content-center">
             <div className="col-lg-6 col-md-8 col-sm-10">
               <form
@@ -167,7 +165,6 @@ export default function AdminBlogPage() {
                   onChange={(e) => updateForm("longNote", e.target.value)}
                   required
                 />
-                {/* Existing Images (When Editing) */}
                 {editId && (
                   <>
                     <label className="fw-bold">Existing Images</label>
@@ -179,14 +176,13 @@ export default function AdminBlogPage() {
                           width={60}
                           height={60}
                           className="rounded me-2 border"
-                          alt="existing img"
+                          alt="existing"
                         />
                       ))}
                     </div>
                   </>
                 )}
-                {/* Upload 3 Images */}
-                <label className="fw-bold">Upload Images (3 Images)</label>
+                <label className="fw-bold">Upload Images</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -211,22 +207,19 @@ export default function AdminBlogPage() {
               </form>
             </div>
           </div>
-          {/* Blogs Table */}
+          {/* BLOG LIST */}
           <div className="container py-4">
             <h2 className="fw-bold mb-4 text-center">Manage Blogs</h2>
             <div className="row g-4">
-              {blogs.map((blog, index) => (
+              {blogs.map((blog) => (
                 <div className="col-lg-4 col-md-6" key={blog._id}>
                   <div className="card shadow-lg border-0 rounded-4 h-100 overflow-hidden">
+                    {/* CAROUSEL */}
                     <div
                       id={`admin-carousel-${blog._id}`}
                       className="carousel slide carousel-fade"
                       data-bs-ride="carousel"
-                      data-bs-interval="2000"
-                      data-bs-touch="true"
-                      data-bs-pause="false"
                     >
-                      {/* DOT INDICATORS */}
                       <div className="carousel-indicators">
                         {blog.images.map((_, i) => (
                           <button
@@ -235,13 +228,11 @@ export default function AdminBlogPage() {
                             data-bs-target={`#admin-carousel-${blog._id}`}
                             data-bs-slide-to={i}
                             className={i === 0 ? "active" : ""}
-                            aria-current={i === 0 ? "true" : undefined}
-                            aria-label={`Slide ${i + 1}`}
                           ></button>
                         ))}
                       </div>
                       <div className="carousel-inner">
-                        {blog.images?.map((img, i) => (
+                        {blog.images.map((img, i) => (
                           <div
                             key={i}
                             className={`carousel-item ${
@@ -253,19 +244,19 @@ export default function AdminBlogPage() {
                               width={600}
                               height={350}
                               className="d-block w-100"
-                              alt="Blog image"
+                              alt="blog"
                             />
                           </div>
                         ))}
                       </div>
                     </div>
-                    {/* Body */}
+                    {/* BODY */}
                     <div className="card-body p-3">
                       <h5 className="fw-bold">{blog.title}</h5>
                       <p className="text-muted">{blog.shortNote}</p>
                       <p className="small">{blog.longNote.slice(0, 60)}...</p>
                     </div>
-                    {/* ACTION BUTTONS */}
+                    {/* BUTTONS */}
                     <div className="card-footer bg-white border-0 d-flex justify-content-around py-3">
                       <button
                         className="btn btn-primary btn-sm px-3"
