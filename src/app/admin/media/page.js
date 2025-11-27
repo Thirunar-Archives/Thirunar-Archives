@@ -89,7 +89,7 @@ export default function MediaPage() {
   return (
     <div className="bg-style">
       <div className="container py-5">
-        <h1 className="mb-5 text-center">Admin Media Page</h1>
+        <h1 className="mb-5 text-center fw-bold">Admin Media Page</h1>
         {/* FILTER BUTTONS */}
         <div className="text-center mb-4">
           {["photo", "video", "publication"].map((btn) => (
