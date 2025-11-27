@@ -257,7 +257,7 @@ export default function AdminBlogPage() {
                       <p className="small">{blog.longNote.slice(0, 60)}...</p>
                     </div>
                     {/* BUTTONS */}
-                    <div className="card-footer bg-white border-0 d-flex justify-content-around py-3">
+                    <div className="card-footer bg-white border-0 d-flex justify-content-between py-3">
                       <button
                         className="btn btn-primary btn-sm px-3"
                         onClick={() => editBlog(blog)}

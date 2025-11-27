@@ -1,7 +1,33 @@
 "use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Media() {
+  const [photos, setPhotos] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [publications, setPublications] = useState([]);
+  // Fetch all media dynamically
+  const loadMedia = async () => {
+    try {
+      const res = await fetch("/api/media");
+      const data = await res.json();
+      if (!data.success) return;
+      const all = data.data;
+      setPhotos(all.filter((m) => m.type === "photo"));
+      setVideos(all.filter((m) => m.type === "video"));
+      setPublications(all.filter((m) => m.type === "publication"));
+    } catch (err) {
+      console.error("Failed to load media", err);
+    }
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      await loadMedia();
+    }
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="bg-style">
@@ -18,125 +44,66 @@ export default function Media() {
           <section className="mb-5">
             <h3 className="mb-4 text-center">Photo Archives</h3>
             <div className="row g-4">
-              {/* Card 1 */}
-              <div className="col-md-4">
-                <div className="card shadow-sm border-0 rounded-3 overflow-hidden">
-                  <Image
-                    src="/img/hero-1.png"
-                    width={500}
-                    height={300}
-                    alt="Pride Event"
-                    className="card-img-top"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">Pride March 2024</h5>
-                    <p className="card-text text-muted">
-                      Moments from the historic Thirunar representation in
-                      Chennai Pride 2024.
-                    </p>
+              {photos.map((item) => (
+                <div className="col-md-4" key={item._id}>
+                  <div className="card shadow-sm border-0 rounded-3 overflow-hidden">
+                    <Image
+                      src={item.imageUrl}
+                      width={500}
+                      height={300}
+                      alt={item.title}
+                      className="card-img-top"
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{item.title}</h5>
+                      <p className="card-text text-muted">{item.description}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* Card 2 */}
-              <div className="col-md-4">
-                <div className="card shadow-sm border-0 rounded-3 overflow-hidden">
-                  <Image
-                    src="/img/hero-2.png"
-                    width={500}
-                    height={300}
-                    alt="Community Meet"
-                    className="card-img-top"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">Community Gathering</h5>
-                    <p className="card-text text-muted">
-                      A safe space meetup for Thirunar youths to connect,
-                      express and share stories.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* Card 3 */}
-              <div className="col-md-4">
-                <div className="card shadow-sm border-0 rounded-3 overflow-hidden">
-                  <Image
-                    src="/img/hero-1.png"
-                    width={500}
-                    height={300}
-                    alt="Training Workshop"
-                    className="card-img-top"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">Skill Development Workshop</h5>
-                    <p className="card-text text-muted">
-                      Empowering trans individuals through digital literacy and
-                      leadership programs.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              ))}
+              {/* Show fallback if no photos */}
+              {photos.length === 0 && (
+                <p className="text-center text-muted">No photos available.</p>
+              )}
             </div>
           </section>
           {/* Video Section */}
           <section className="mb-5">
             <h3 className="mb-4 text-center">Featured Videos</h3>
             <div className="row g-4">
-              {/* Video 1 */}
-              <div className="col-md-6">
-                <div className="ratio ratio-16x9 rounded-4 overflow-hidden border">
-                  <iframe
-                    src="https://www.youtube.com/embed/yourVideoID2"
-                    title="Thirunar Stories"
-                    allowFullScreen
-                  ></iframe>
+              {videos.map((item) => (
+                <div className="col-md-6" key={item._id}>
+                  <div className="ratio ratio-16x9 rounded-4 overflow-hidden border">
+                    <iframe
+                      src={item.videoUrl.replace("watch?v=", "embed/")}
+                      title={item.title}
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                  <p className="mt-2 fw-semibold">{item.title}</p>
                 </div>
-                <p className="mt-2 fw-semibold">
-                  Documentary: Voices of Thirunar Community
-                </p>
-              </div>
-              {/* Video 2 */}
-              <div className="col-md-6">
-                <div className="ratio ratio-16x9 rounded-4 overflow-hidden border">
-                  <iframe
-                    src="https://www.youtube.com/embed/yourVideoID2"
-                    title="Pride Event"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <p className="mt-2 fw-semibold">
-                  Pride 2024 - Behind The Scenes
-                </p>
-              </div>
+              ))}
+              {videos.length === 0 && (
+                <p className="text-center text-muted">No videos available.</p>
+              )}
             </div>
           </section>
           {/* Publications Section */}
           <section className="mb-5">
             <h3 className="mb-4 text-center">Publications & Reports</h3>
             <ul className="list-group shadow-sm rounded-4 overflow-hidden border">
-              <li className="list-group-item">
-                <strong>Thirunar Oral Histories - Volume 1</strong>
-                <br />
-                <span className="text-muted">
-                  A collection of interviews documenting lived transgender
-                  experiences in Tamil Nadu.
-                </span>
-              </li>
-              <li className="list-group-item">
-                <strong>Annual Report 2024: Inclusion & Change</strong>
-                <br />
-                <span className="text-muted">
-                  An overview of community initiatives and social development
-                  projects.
-                </span>
-              </li>
-              <li className="list-group-item">
-                <strong>Trans Rights Movement Timeline - India</strong>
-                <br />
-                <span className="text-muted">
-                  Chronological documentation of the struggle and achievements
-                  of the trans community.
-                </span>
-              </li>
+              {publications.map((item) => (
+                <li className="list-group-item" key={item._id}>
+                  <strong>{item.title}</strong>
+                  <br />
+                  <span className="text-muted">{item.description}</span>
+                </li>
+              ))}
+              {publications.length === 0 && (
+                <li className="list-group-item text-muted text-center">
+                  No publications found.
+                </li>
+              )}
             </ul>
           </section>
         </div>

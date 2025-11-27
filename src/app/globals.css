@@ -825,6 +825,16 @@ body.sidebar-open {
   background: #e63946 !important;
   color: white !important;
 }
+.btn-outline-danger {
+  padding: 10px 20px;
+  border: 2px solid #e63946;   
+  background-color: transparent;
+  color: #e63946;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 /* MEDIA */
 .card:hover .card-img-top {
   transform: scale(1);
