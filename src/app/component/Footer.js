@@ -79,9 +79,9 @@ export default function Footer() {
             © {new Date().getFullYear()} Thirunar Archives — All Rights Reserved
           </div>
           {/* Right Text */}
-          <div className="col-md-4 text-md-end">
+          {/* <div className="col-md-4 text-md-end">
             Designed by <strong>Cloudlabel</strong>
-          </div>
+          </div> */}
         </div>
       </div>
       {/* Back to Top Button */}

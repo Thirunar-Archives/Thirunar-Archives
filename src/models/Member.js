@@ -6,7 +6,11 @@ const MemberSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    category: { enum: ["Board-Advisor", "Team"], type: String, required: true },
+    category: {
+      enum: ["Board-Member", "Team-Member"],
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
       required: true,
