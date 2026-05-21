@@ -57,14 +57,14 @@ export default function HomeLayout() {
               <div className="row g-0 rounded-4 overflow-hidden shadow-lg">
                 <div className="col-md-6 bg-dark text-white p-5 d-flex flex-column justify-content-center">
                   <div className="mb-4">
-                    <Image src="/img/eye.png" width={80} height={80} alt="Vision Icon" className="rounded-circle border border-danger border-2 p-1 bg-white" />
+                    <Image src="/img/eye.PNG" width={80} height={80} alt="Vision Icon" className="rounded-circle border border-danger border-2 p-1 bg-white" />
                   </div>
                   <h3 className="fw-bold mb-4 text-uppercase tracking-wider" style={{ color: '#dc3545' }}>Our Vision</h3>
                   <p className="fs-4 lh-base italic">"To create a world where LGBTQIA+ lives, human diversity, and their labour are visible, valued, and woven into collective memory and cultural narratives."</p>
                 </div>
                 <div className="col-md-6 bg-white text-dark p-5 d-flex flex-column justify-content-center border-start">
                   <div className="mb-4">
-                    <Image src="/img/mission.png" width={80} height={80} alt="Mission Icon" className="rounded-circle border border-danger border-2 p-1 bg-light" />
+                    <Image src="/img/mission.PNG" width={80} height={80} alt="Mission Icon" className="rounded-circle border border-danger border-2 p-1 bg-light" />
                   </div>
                   <h3 className="fw-bold mb-4 text-uppercase tracking-wider text-danger">Our Mission</h3>
                   <ul className="list-unstyled fs-6">
