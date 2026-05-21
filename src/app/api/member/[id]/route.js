@@ -1,5 +1,5 @@
 import ConnectMongoose from "@/utilis/connectMongoose";
-import Member from "@/models/member";
+import Member from "@/models/Member";
 import cloudinary from "@/utilis/cloudinary";
 import { NextResponse } from "next/server";
 
