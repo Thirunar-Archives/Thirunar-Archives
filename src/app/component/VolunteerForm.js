@@ -23,18 +23,15 @@ export default function VolunteerForm() {
 
   const onSubmit = async (data) => {
     try {
-      // THE URL YOU JUST GENERATED
       const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbyLrJPdUXzRdQ72nEc3tf6kjZYRAOAC3GlEI77HI9VB-ETQmZ9mCE9AyZVR4LlOv2JC/exec";
 
       await fetch(GOOGLE_URL, {
         method: "POST",
-        mode: "no-cors", // THIS IS CRITICAL
+        mode: "no-cors", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
-      // Since 'no-cors' doesn't return a standard response, we assume success 
-      // if the fetch doesn't throw an error.
       alert("Success! Your details have been saved to Google Drive.");
       reset();
     } catch (error) {
