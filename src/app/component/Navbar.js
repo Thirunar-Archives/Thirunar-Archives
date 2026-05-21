@@ -242,7 +242,7 @@ export default function Navbar() {
 
           <div className="sidebar-footer">
             <div className="sidebar-footer-links d-flex flex-column gap-2 align-items-center w-100 px-3 mb-3">
-              <a href="/donate" className="w-100 text-center py-2 rounded-3 bg-white text-danger fw-extrabold tracking-wider" style={{ fontSize: "0.85rem" }}>
+              <a href="/Donate" className="w-100 text-center py-2 rounded-3 bg-white text-danger fw-extrabold tracking-wider" style={{ fontSize: "0.85rem" }}>
                 DONATE
               </a>
               <Link href="/admin/login" onClick={toggleSidebar} className="w-100 text-center py-2 rounded-3 border border-light text-white fw-bold tracking-wide text-uppercase text-decoration-none" style={{ fontSize: "0.75rem", opacity: 0.85 }}>
